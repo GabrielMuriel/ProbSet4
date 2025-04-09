@@ -1,0 +1,34 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.3'
+    id 'io.spring.dependency-management' version '1.0.13.RELEASE'
+    id 'java'
+}
+
+group = 'com.lfgn'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'  // If using JPA for database
+    implementation 'org.springframework.boot:spring-boot-starter-validation'  // For validating data input
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('bootJar') {
+    mainClass.set('com.lfgn.course_node.CourseNodeApplication')  // Update to match your main class
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
