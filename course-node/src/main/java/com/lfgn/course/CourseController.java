@@ -1,7 +1,8 @@
-package com.example.course;
+package com.lfgn.course;
 
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/courses")
 public class CourseController {
@@ -14,7 +15,7 @@ public class CourseController {
 
     @GetMapping
     public String[] getCourses() {
-        return courseService.getAllCourses();
+         return courseService.getAllCourses();
     }
 
     @PostMapping("/enroll")

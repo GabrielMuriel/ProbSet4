@@ -25,10 +25,6 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-tasks.named('bootJar') {
-    mainClass.set('com.lfgn.course_node.CourseNodeApplication')  // Update to match your main class
-}
-
 tasks.named('test') {
     useJUnitPlatform()
 }

@@ -1,33 +1,15 @@
-version: '3.8'
-
 services:
-  auth-service:
-    build: ./auth-node
+  frontend-service:
+    build: ./frontend-node
     ports:
-      - "8081:8080"
+      - "8080:8080"
     networks:
       - enrollnet
-
   course-service:
     build: ./course-node
     ports:
       - "8082:8080"
     networks:
       - enrollnet
-
-  grade-service:
-    build: ./grade-node
-    ports:
-      - "8083:8080"
-    networks:
-      - enrollnet
-
-  frontend-service:
-    build: ./frontend-node
-    ports:
-      - "8080:80"
-    networks:
-      - enrollnet
-
 networks:
   enrollnet:

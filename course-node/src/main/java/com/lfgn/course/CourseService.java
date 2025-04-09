@@ -1,4 +1,4 @@
-package com.example.course;
+package com.lfgn.course;
 
 import org.springframework.stereotype.Service;
 
@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 public class CourseService {
 
     public String[] getAllCourses() {
+
         return new String[] {"Math 101", "Science 101"};
     }
 }
