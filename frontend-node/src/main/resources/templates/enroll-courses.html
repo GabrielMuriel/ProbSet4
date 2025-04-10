@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+  </head>
+  <body> 
+    <div style="text-align: center; margin: 24px;">
+        <h1>LFGN Enrollment System</h1>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+
+        <a href="index.html"><p>Back to Home Page</p></a>
+    </div>
+
+    <!-- REPLACE THIS PART BELOW FOR NEW HTML PAGES -->
+    <div class="border-top border-2" style="margin-left: 24px; margin-right: 24px;">
+        <h2 style="margin-top: 16px;">Enroll to Open Courses</h2>
+        <p style="margin-bottom: 16px;">You may enroll in your preferred courses here.</p>
+
+        <!-- EXAMPLE INFO BELOW USING TEXT INPUT FIELDS -->
+        <div>
+            <form>
+                <div class="mb-3">
+                    <label for="courseCode" class="form-label">Course Code</label>
+                    <input type="text" class="form-control" id="courseCode" placeholder="Enter Course Code">
+                </div>
+                <div class="mb-3">
+                    <label for="courseName" class="form-label">Course Name</label>
+                    <input type="text" class="form-control" id="courseName" placeholder="Enter Course Name">
+                </div>
+                <button type="submit" class="btn btn-primary">Enroll</button>
+            </form>
+        </div>
+
+        <!-- FOR BUTTON SET, USE BELOW. OTHERWISE, REMOVE -->
+        <div class="d-grid gap-2" style="margin-top:8px;">
+            <div class="col">
+                <a href="/view-available-courses" class="btn btn-primary btn-lg btn-block">View Available Courses</a>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>
