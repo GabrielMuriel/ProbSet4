@@ -5,6 +5,8 @@ services:
       - "8080:8080"
     networks:
       - enrollnet
+    depends_on:
+      - course-service
   course-service:
     build: ./course-node
     ports:
