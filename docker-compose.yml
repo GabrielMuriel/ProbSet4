@@ -1,4 +1,18 @@
 services:
+  mysql-db:
+    image: mysql:8.0.41
+    environment:
+      MYSQL_DATABASE: enrollment_system
+      MYSQL_ROOT_PASSWORD: LKD281309!
+    ports:
+      - "3307:3306"
+    networks:
+      - enrollnet
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   frontend-service:
     build: ./frontend-node
     ports:
@@ -13,14 +27,8 @@ services:
       - "8082:8080"
     networks:
       - enrollnet
-  mysql-db:
-    image: mysql:8.0.41
-    environment:
-      MYSQL_DATABASE: enrollment_system
-      MYSQL_ROOT_PASSWORD: LKD281309!
-    ports:
-      - "3307:3306"
-    networks:
-      - enrollnet
+    depends_on:
+      mysql-db:
+        condition: service_healthy
 networks:
   enrollnet:
