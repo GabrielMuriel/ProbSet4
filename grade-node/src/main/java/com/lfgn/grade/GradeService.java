@@ -1,15 +1,23 @@
-package com.example.grade;
+package com.lfgn.grade;
 
+import com.lfgn.grade.model.Grade;
+import com.lfgn.grade.repository.GradeRepository;
 import org.springframework.stereotype.Service;
 
-@Service
-public class GradeService {
+import java.util.List;
 
-    public String getGrades() {
-        return "Math: A, Science: B+";
+@Service public class GradeService {
+    private final GradeRepository gradeRepository;
+
+    public GradeService(GradeRepository gradeRepository) {
+        this.gradeRepository = gradeRepository;
     }
 
-    public String uploadGrade(Grade grade) {
-        return "Grade uploaded: " + grade.getCourse() + " - " + grade.getGrade();
+    public List<Grade> getAllGrades() {
+        return gradeRepository.findAll();
+    }
+
+    public void saveGrade(Grade grade) {
+        gradeRepository.save(grade);
     }
 }

@@ -1,10 +1,11 @@
-package com.example.grade;
+package com.lfgn.grade;
 
+import com.lfgn.grade.model.Grade;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/grades")
-public class GradeController {
+import java.util.List;
+
+@CrossOrigin(origins = "*") @RestController @RequestMapping("/grades") public class GradeController {
 
     private final GradeService gradeService;
 
@@ -13,12 +14,13 @@ public class GradeController {
     }
 
     @GetMapping
-    public String getGrades() {
-        return gradeService.getGrades();
+    public List<Grade> getGrades() {
+        return gradeService.getAllGrades();
     }
 
-    @PostMapping
-    public String uploadGrade(@RequestBody Grade grade) {
-        return gradeService.uploadGrade(grade);
+    @PostMapping("/add")
+    public String addGrade(@RequestBody Grade grade) {
+        gradeService.saveGrade(grade);
+        return "Grade added.";
     }
 }

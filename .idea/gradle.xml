@@ -11,12 +11,23 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/course-node" />
+            <option value="$PROJECT_DIR$/frontend-node" />
+            <option value="$PROJECT_DIR$/grade-node" />
           </set>
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/course-node" />
         <option name="gradleJvm" value="openjdk-23" />
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/grade-node" />
+        <option name="gradleJvm" value="openjdk-23" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/grade-node" />
+          </set>
+        </option>
       </GradleProjectSettings>
     </option>
   </component>

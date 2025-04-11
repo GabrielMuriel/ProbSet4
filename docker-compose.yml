@@ -24,10 +24,20 @@ services:
       - enrollnet
     depends_on:
       - course-service
+      - grade-service
   course-service:
     build: ./course-node
     ports:
       - "8082:8080"
+    networks:
+      - enrollnet
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+  grade-service:
+    build: ./grade-node
+    ports:
+      - "8083:8080"
     networks:
       - enrollnet
     depends_on:

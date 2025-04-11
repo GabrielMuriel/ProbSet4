@@ -1,3 +1,4 @@
 rootProject.name = 'ProbSet4'
 include 'course-node'
 include 'frontend-node'
+include 'grade-node'
