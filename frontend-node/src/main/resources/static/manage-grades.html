@@ -10,7 +10,6 @@
 <h1>Manage Grades</h1>
 
 <div class="container">
-    <!-- Grade List -->
     <h2 class="mt-4">Grades</h2>
     <table class="table table-striped">
         <thead>
@@ -76,7 +75,7 @@
                 <td>${grade.courseId}</td>
                 <td>${grade.studentId}</td>
                 <td>
-                    <button class="btn btn-warning btn-sm" onclick="editGrade(${grade.id})">Edit</button>
+                    <button class="btn btn-warning btn-sm" onclick="editGrade(${grade.id}, '${grade.grade}', '${grade.courseId}', '${grade.studentId}')">Edit</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteGrade(${grade.id})">Delete</button>
                 </td>
             `;
@@ -130,8 +129,27 @@
             .catch(error => console.error('Error deleting grade:', error));
     }
 
+    // Function to handle edit button click
+    function editGrade(id, grade, courseId, studentId) {
+        document.getElementById('grade').value = grade;
+        document.getElementById('courseID').value = courseId;
+        document.getElementById('studentID').value = studentId;
+        // Update the submit button functionality to update
+        const form = document.getElementById('addGradeForm');
+        form.removeEventListener('submit', handleAddGradeSubmit); // Remove previous event listener
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form from submitting normally
+            const updatedGrade = {
+                grade: document.getElementById('grade').value,
+                courseId: document.getElementById('courseID').value,
+                studentId: document.getElementById('studentID').value
+            };
+            updateGrade(id, updatedGrade);
+        });
+    }
+
     // Handling form submission to create grade
-    document.getElementById('addGradeForm').addEventListener('submit', function(event) {
+    function handleAddGradeSubmit(event) {
         event.preventDefault(); // Prevent form from submitting normally
 
         const grade = {
@@ -141,7 +159,9 @@
         };
 
         createGrade(grade);
-    });
+    }
+
+    document.getElementById('addGradeForm').addEventListener('submit', handleAddGradeSubmit);
 
     // Call fetchGrades initially to display grades on page load
     document.addEventListener('DOMContentLoaded', fetchGrades);
