@@ -1,6 +1,9 @@
 package com.lfgn.course;
 
+import com.lfgn.course.model.Course;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -14,7 +17,7 @@ public class CourseController {
     }
 
     @GetMapping
-    public String[] getCourses() {
+    public List<Course> getCourses() {
          return courseService.getAllCourses();
     }
 
