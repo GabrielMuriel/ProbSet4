@@ -14,9 +14,9 @@ services:
     networks:
       - enrollnet
   mysql-db:
-    image: mysql:8.0.41
+    image: mysql:8.2.0
     environment:
-      MYSQL_DATABASE: enrollment_db
+      MYSQL_DATABASE: enrollment_system
       MYSQL_ROOT_PASSWORD: LKD281309!
       MYSQL_USER: root
       MYSQL_PASSWORD: LKD281309!
