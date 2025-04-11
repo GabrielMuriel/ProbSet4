@@ -18,10 +18,8 @@ services:
     environment:
       MYSQL_DATABASE: enrollment_system
       MYSQL_ROOT_PASSWORD: LKD281309!
-      MYSQL_USER: root
-      MYSQL_PASSWORD: LKD281309!
     ports:
-      - "3306:3306"
+      - "3307:3306"
     networks:
       - enrollnet
 networks:
