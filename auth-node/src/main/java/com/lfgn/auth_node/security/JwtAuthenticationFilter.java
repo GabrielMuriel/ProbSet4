@@ -1,19 +1,20 @@
 package com.lfgn.auth_node.security;
 
 import io.jsonwebtoken.Claims;
-import org.springframework.stereotype.Component;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.Filter;
+import javax.naming.AuthenticationException;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 
-@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
@@ -23,12 +24,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, javax.servlet.http.HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Claims claims = jwtUtil.resolveClaims(request);
-        if (claims != null) {
-            // Proceed with valid JWT claims
-            // You can pass the claims to the request, or set a security context here
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+
+        try {
+            String token = jwtUtil.resolveToken(request);
+            if (StringUtils.hasText(token)) {
+                Claims claims = jwtUtil.resolveClaims(request);
+                if (jwtUtil.validateClaims(claims)) {
+                    String username = claims.getSubject();
+                    String role = claims.get("role", String.class);
+
+                    UsernamePasswordAuthenticationToken auth =
+                            new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
+
+                    auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
+            }
+        } catch (Exception ex) {
+            // You can log the exception or handle errors gracefully
         }
+
         filterChain.doFilter(request, response);
     }
 }
