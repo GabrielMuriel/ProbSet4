@@ -19,27 +19,87 @@
         <h2 style="margin-top: 16px;">Enroll to Open Courses</h2>
         <p style="margin-bottom: 16px;">You may enroll in your preferred courses here.</p>
 
-        <!-- EXAMPLE INFO BELOW USING TEXT INPUT FIELDS -->
-        <div>
-            <form>
-                <div class="mb-3">
-                    <label for="courseCode" class="form-label">Course Code</label>
-                    <input type="text" class="form-control" id="courseCode" placeholder="Enter Course Code">
-                </div>
-                <div class="mb-3">
-                    <label for="courseName" class="form-label">Course Name</label>
-                    <input type="text" class="form-control" id="courseName" placeholder="Enter Course Name">
-                </div>
-                <button type="submit" class="btn btn-primary">Enroll</button>
-            </form>
+        <!-- Dropdown -->
+        <div class="mb-3">
+            <label for="courseSelect" class="form-label">Select Course</label>
+            <select id="courseSelect" class="form-select">
+                <option selected disabled>Choose a course</option>
+            </select>
         </div>
 
-        <!-- FOR BUTTON SET, USE BELOW. OTHERWISE, REMOVE -->
-        <div class="d-grid gap-2" style="margin-top:8px;">
-            <div class="col">
-                <a href="/view-available-courses" class="btn btn-primary btn-lg btn-block">View Available Courses</a>
-            </div>
+        <!-- Course info -->
+        <div id="courseInfo" class="card p-3 mb-3" style="display:none;">
+            <h5>Course Details</h5>
+            <p><strong>Course Code:</strong> <span id="idcourses"></span></p>
+            <p><strong>Course Name:</strong> <span id="courseName"></span></p>
+            <p><strong>Faculty:</strong> <span id="facultyID"></span></p>
+            <!--<p><strong>Number of Enrolled Students:</strong> <span id="enrolledNum"></span></p>
+            <p><strong>Enrollment Cap:</strong> <span id="enrollmentCap"></span></p>-->
+
+            <!-- Enroll button -->
+            <button id="enrollBtn" class="btn btn-success">Enroll</button>
         </div>
+
     </div>
+
+    <script>
+        let selectedCourse = null;
+
+        // Fetch courses and populate dropdown
+        window.onload = function () {
+            fetch('http://localhost:8082/courses')
+                .then(res => res.json())
+                .then(courses => {
+                    const select = document.getElementById('courseSelect');
+                    courses.forEach(course => {
+                        const option = document.createElement('option');
+                        option.value = course.idcourses;
+                        option.textContent = `${course.courseName} (${course.idcourses})`;
+                        option.dataset.course = JSON.stringify(course);  // Save full course info
+                        select.appendChild(option);
+                    });
+                });
+        };
+
+        // Show course details on selection
+        document.getElementById('courseSelect').addEventListener('change', function () {
+            const selectedOption = this.options[this.selectedIndex];
+            const course = JSON.parse(selectedOption.dataset.course);
+            selectedCourse = course;
+
+            document.getElementById('idcourses').innerText = course.idcourses;
+            document.getElementById('courseName').innerText = course.courseName;
+            document.getElementById('facultyID').innerText = course.facultyID;
+            // document.getElementById('enrolledNum').innerText = course.enrolledNum;
+            // document.getElementById('enrollmentCap').innerText = course.enrollmentCap;
+
+            document.getElementById('courseInfo').style.display = 'block';
+        });
+
+        // Enroll action
+        document.getElementById('enrollBtn').addEventListener('click', function () {
+            const studentId = 1; // Replace with actual student ID from login/session
+
+            fetch('http://localhost:8082/courses/enroll', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    studentID: studentId,
+                    courseID: selectedCourse.idcourses
+                })
+            })
+                .then(res => res.text())
+                .then(msg => {
+                    alert(`Enrollment status: ${msg}`);
+                })
+                .catch(err => {
+                    alert('Enrollment failed.');
+                    console.error(err);
+                });
+        });
+    </script>
+
   </body>
 </html>

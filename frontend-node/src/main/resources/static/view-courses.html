@@ -6,7 +6,8 @@
     <title>Home Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
   </head>
-  <body> 
+
+  <body>
     <div style="text-align: center; margin: 24px;">
         <h1>LFGN Enrollment System</h1>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
@@ -21,44 +22,47 @@
 
         <!-- EXAMPLE INFO BELOW -->
         <div class="table-responsive">
-            <table class="table table-striped table-bordered">
+            <table id="coursesTable" class="table table-striped table-bordered">
                 <thead>
-                    <tr>
-                        <th>Course Code</th>
-                        <th>Course Name</th>
-                        <th>Units</th>
-                        <th>Schedule</th>
-                    </tr>
+                <tr>
+                    <th>Course ID</th>
+                    <th>Course Name</th>
+                    <th>Faculty</th>
+                    <!--<th>Enrolled Students</th>
+                    <th>Enrollment Cap</th>-->
+                </tr>
                 </thead>
                 <tbody>
-                    <!-- Example data, replace with actual data -->
-                    <tr>
-                        <td>CSSECDV</td>
-                        <td>Computer Security and Development</td>
-                        <td>3</td>
-                        <td>M/W/F 10:00-11:00 AM</td>
-                    </tr>
-                    <tr>
-                        <td>THS-ST3</td>
-                        <td>Thesis 3 - Software Technology</td>
-                        <td>2</td>
-                        <td>T/Th 1:00-2:30 PM</td>
-                    </tr>
-                    <tr>
-                        <td>GERIZAL</td>
-                        <td>The Life and Works of Rizal</td>
-                        <td>3</td>
-                        <td>M/W/F 2:30-4:00 PM</td>
-                    </tr>
+                <!-- Data will be injected here via JavaScript -->
                 </tbody>
             </table>
-
-        <!-- FOR BUTTON SET, USE BELOW. OTHERWISE, REMOVE -->
-        <div class="d-grid gap-2" style="margin-top:8px;">
-            <div class="col">
-                <a href="/view-available-courses" class="btn btn-primary btn-lg btn-block">View Available Courses</a>
-            </div>
         </div>
     </div>
+
+    <script>
+        window.onload = function () {
+            fetch('http://localhost:8082/courses')  // Adjust port if needed
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    const tableBody = document.querySelector("#coursesTable tbody");
+                    data.forEach(course => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                      <td>${course.idcourses}</td>
+                      <td>${course.courseName}</td>
+                      <td>${course.facultyID}</td>
+                      <!--<td>${course.enrolledNum}</td>
+                      <td>${course.enrollmentCap}</td>-->
+                    `;
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(err => {
+                    console.error("Error loading courses:", err);
+                });
+        };
+    </script>
   </body>
+
 </html>
