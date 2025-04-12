@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>JWT Login</title>
+</head>
+<body>
+<h1>Login</h1>
+<form id="loginForm">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required><br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <button type="submit">Login</button>
+</form>
+
+<p id="status"></p>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent normal form submission
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await fetch('http://localhost:8084/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            console.log(response)
+
+            if (response.ok) {
+                const data = await response.json();
+                const token = data.token; // adjust if your backend returns a different key
+
+                // Store the token (localStorage is common)
+                localStorage.setItem('jwtToken', token);
+
+                document.getElementById('status').textContent = 'Login successful!';
+                // Optional: redirect or update UI
+            } else {
+                document.getElementById('status').textContent = 'Login failed: ' + response.statusText;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('status').textContent = 'An error occurred. See console.';
+        }
+    });
+</script>
+</body>
+</html>
