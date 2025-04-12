@@ -14,11 +14,10 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Grade</th>
-            <th scope="col">Course ID</th>
-            <th scope="col">Student ID</th>
-            <th scope="col">Actions</th>
+            <th>ID</th>
+            <th>Grade</th>
+            <th>Course ID</th>
+            <th>Student ID</th>
         </tr>
         </thead>
         <tbody id="gradesTable">
@@ -29,19 +28,16 @@
     <!-- Add Grade Form -->
     <h2 class="mt-4">Add Grade</h2>
     <form id="addGradeForm">
-        <div class="mb-3">
-            <label for="courseID" class="form-label">Course ID</label>
-            <input type="number" class="form-control" id="courseID" required>
-        </div>
-        <div class="mb-3">
-            <label for="studentID" class="form-label">Student ID</label>
-            <input type="number" class="form-control" id="studentID" required>
-        </div>
-        <div class="mb-3">
-            <label for="grade" class="form-label">Grade</label>
-            <input type="number" class="form-control" id="grade" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Add Grade</button>
+        <label for="courseID">Course ID</label>
+        <input type="number" id="courseID" required><br>
+
+        <label for="studentID">Student ID</label>
+        <input type="number" id="studentID" required><br>
+
+        <label for="grade">Grade</label>
+        <input type="number" id="grade" required><br>
+
+        <button type="submit">Add Grade</button>
     </form>
 </div>
 
@@ -51,122 +47,58 @@
 </div>
 
 <script>
-    // Function to fetch all grades
+    // Fetch and display all grades
     function fetchGrades() {
         fetch('http://localhost:8083/grades')
             .then(response => response.json())
             .then(data => {
-                console.log(data);  // Log the grade data
-                displayGrades(data);
+                const gradesTable = document.getElementById('gradesTable');
+                gradesTable.innerHTML = '';
+
+                data.forEach(grade => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${grade.id}</td>
+                        <td>${grade.grade}</td>
+                        <td>${grade.courseId}</td>
+                        <td>${grade.studentId}</td>
+                    `;
+                    gradesTable.appendChild(row);
+                });
             })
             .catch(error => console.error('Error fetching grades:', error));
     }
 
-    // Function to display grades in the table
-    function displayGrades(grades) {
-        const gradesTable = document.getElementById('gradesTable');
-        gradesTable.innerHTML = ''; // Clear previous rows
-
-        grades.forEach(grade => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${grade.id}</td>
-                <td>${grade.grade}</td>
-                <td>${grade.courseId}</td>
-                <td>${grade.studentId}</td>
-                <td>
-                    <button class="btn btn-warning btn-sm" onclick="editGrade(${grade.id}, '${grade.grade}', '${grade.courseId}', '${grade.studentId}')">Edit</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteGrade(${grade.id})">Delete</button>
-                </td>
-            `;
-            gradesTable.appendChild(row);
-        });
-    }
-
-    // Function to create a new grade
+    // Add new grade
     function createGrade(grade) {
-        fetch('http://localhost:8083/grades', {
+        fetch('http://localhost:8083/grades/add', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(grade)
         })
             .then(response => response.json())
             .then(data => {
                 console.log('Grade created:', data);
-                fetchGrades(); // Refresh the list after creating
+                fetchGrades();
             })
             .catch(error => console.error('Error creating grade:', error));
     }
 
-    // Function to update a grade by ID
-    function updateGrade(id, grade) {
-        fetch(`http://localhost:8083/grades/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(grade)
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Grade updated:', data);
-                fetchGrades(); // Refresh the list after updating
-            })
-            .catch(error => console.error('Error updating grade:', error));
-    }
-
-    // Function to delete a grade by ID
-    function deleteGrade(id) {
-        fetch(`http://localhost:8083/grades/${id}`, {
-            method: 'DELETE'
-        })
-            .then(() => {
-                console.log('Grade deleted');
-                fetchGrades(); // Refresh the list after deleting
-            })
-            .catch(error => console.error('Error deleting grade:', error));
-    }
-
-    // Function to handle edit button click
-    function editGrade(id, grade, courseId, studentId) {
-        document.getElementById('grade').value = grade;
-        document.getElementById('courseID').value = courseId;
-        document.getElementById('studentID').value = studentId;
-        // Update the submit button functionality to update
-        const form = document.getElementById('addGradeForm');
-        form.removeEventListener('submit', handleAddGradeSubmit); // Remove previous event listener
-        form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form from submitting normally
-            const updatedGrade = {
-                grade: document.getElementById('grade').value,
+    // Handle form submission
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('addGradeForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const grade = {
                 courseId: document.getElementById('courseID').value,
-                studentId: document.getElementById('studentID').value
+                studentId: document.getElementById('studentID').value,
+                grade: document.getElementById('grade').value
             };
-            updateGrade(id, updatedGrade);
+            console.log(grade)
+            createGrade(grade);
         });
-    }
 
-    // Handling form submission to create grade
-    function handleAddGradeSubmit(event) {
-        event.preventDefault(); // Prevent form from submitting normally
-
-        const grade = {
-            courseId: document.getElementById('courseID').value,
-            studentId: document.getElementById('studentID').value,
-            grade: document.getElementById('grade').value
-        };
-
-        createGrade(grade);
-    }
-
-    document.getElementById('addGradeForm').addEventListener('submit', handleAddGradeSubmit);
-
-    // Call fetchGrades initially to display grades on page load
-    document.addEventListener('DOMContentLoaded', fetchGrades);
+        fetchGrades();
+    });
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 </body>
 </html>
